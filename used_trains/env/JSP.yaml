@@ -1,0 +1,3 @@
+task: JSP
+env_name: workshop
+description: to process multiple job shop scheduling tasks simultaneously to optimize all objectives under dynamic environments. Generally, each job shop scheduling task tends to search for a scheduling solution to optimize a specific objection function. Each task, consisting of multiple jobs with a sequence of operations, need to be processed by a set of machines. There are three job shop scheduling tasks, each of which has distinct objectives, i.e., mean-weighted-tardiness, mean-weighted-flowtime, and max-weighted-tardiness

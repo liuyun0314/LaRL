@@ -1,0 +1,123 @@
+defaults:
+  - _self_
+  - task: JSP
+  - train"${task}LLM
+  - hydra/job_logging: disabled
+  - override hydra/launcher: local
+  - override hydra/output: local
+#  - override hydra/job_logging: custom_logging
+
+#hydra:
+#  job:
+#    chdir: True
+
+device: cuda:6
+n_action: 9
+num_tasks: 3
+num_new_jobs: 10
+num_machines: 10
+E_utliz: 0.95
+num_ops_range: (1, 10)
+num_cand_machines_range: (1, 10)
+weights: [0.2, 0.6, 0.2]
+processing_time_range: (1, 99)
+repair_time_range: (1, 99)
+due_time_multiplier: 1.5
+num_warmup_jobs: 0
+obs_dim: 14
+share_obs_dim: 140
+DDT: 1.5
+beta: 0.95
+num_instances: 1
+root_dir: '/home/yunliu/Code/4/GenertedInstances/10/2025.txt'
+
+# args for parameters
+num_training_instances: 3
+max_train_steps: 100
+K_epochs: 10
+eps_clip: 0.2
+use_linear_lr_decay: True
+experiment_name: check
+testModels_dir: 'E:/Phd_work/myWork/Code/3/tModels/'
+save_interval: 10
+cuda: True
+cuda_deterministic: True
+n_training_threads: 1
+max_reDecision_steps: 2
+use_gpu: True
+
+# optimizer parameters
+lr: 5e-2
+critic_lr: 5e-2
+opti_eps: 1e-7
+weight_decay: 0
+lr_decay_rate: 1e-4
+save_dir: '/home/yunliu/Code/4/saveFoldername/'
+savetag: ''
+
+
+# args for PPO
+ppo_epoch: 15
+use_clipped_value_loss: False
+clip_param: 0.2
+num_mini_batch: 10
+entropy_coef: 0.01
+value_loss_coef: 1
+use_max_grad_norm: False
+max_grad_norm: 10.0
+use_gae: False
+gamma: 0.99
+gae_lambda: 0.95
+use_proper_time_limits: False
+use_huber_loss: False
+use_value_active_masks: True
+use_policy_active_masks: False
+huber_delta: 10.0
+
+# args for eval parameters
+use_eval: True
+eval_interval: 200
+eval_episodes: 32
+
+# args for transformer
+encode_state: False
+n_block: 4
+n_embd: 128
+n_head: 1
+dec_actor: False
+share_actor: False
+reasoning_dim: 64
+
+# network parameters
+share_policy: True
+use_centralized_V: True
+stacked_frames: 1
+use_stacked_frames: False
+hidden_size: 64
+layer_N: 2
+use_ReLU: True
+use_popart: False
+use_valuenorm: True
+use_feature_normalization: True
+use_orthogonal: True
+gain: 0.01
+use_dynamic_reward: True
+
+# replay buffer parameters
+episode_length: 40
+batch_size: 20
+
+# args for experiments
+iter: 10
+number_of_testinstances: 30
+num_generations: 2
+test_gap: 2
+
+# args for evolving
+popn_size: 12
+subpopn_size: 3
+mutation_prob: 0.8
+crossover_prob: 0.8
+num_elites: 1
+rollout_size: 2
+n_rollout_threads: 1
