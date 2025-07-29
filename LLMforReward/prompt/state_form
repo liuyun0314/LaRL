@@ -1,0 +1,58 @@
+
+State_forms = {
+    "task_state": "The observation at each decision point is 10 dimension:\
+    0: CRJ_avg: The average job completion rates at a decision point.\
+    1: CRJ_std: The standard deviation of job completion rates at a decision point.\
+    2: TR_avg: The average processing delay rate of jobs at a decision point.\
+    3: TR_std: The standard deviation of processing delay rates at a decision point.\
+    4: Tard_e: The estimated tardiness rate at a decision point.\
+    5: Tard_a: The estimated tardiness rate at a decision point.\
+    6: U_m: The workload of a machines at a decision point.\
+    7: busy: The working status of a machines at a decision point, 1 means busy, 0 means idle.\
+    8: avail: The availability of a machines at a decision point, 1 means available, 0 means breakdown.\
+    9: workload: The workload of a machines at a decision point.\
+    "
+    }
+
+
+class Base_prompt(object):
+def __init__(self, map_name, factor=True) -> None:
+    self.map_name = map_name
+    self.task_description = ''
+    self.state_form = ''
+    self.role_instruction = ''
+    self.factor = factor
+
+def get_message(self):
+
+    message=[]
+    message.append({'role':'user','content':self.task_description+self.state_form+self.role_instruction})
+    return message
+
+def factor_check(self, out_content):
+    error_idx, error_content = -1, ''
+    pass_check = True
+    factor_num = 0
+    for i in range(len(out_content)):
+        try:
+            func = json.loads(out_content[i])['Functions']
+            namespace = {}
+            exec(func,namespace)
+            active_evaluation_func = namespace['evaluation_func']
+            evaluation_factors = active_evaluation_func(np.array([self.obs]*2), np.array([self.action]*2))#, np.array([self.obs]*2))
+            factor_num = len(evaluation_factors)
+            if not self.factor and len(evaluation_factors) > 1:
+                pass_check=False
+                error_idx = i
+                error_content = f'There is an error in your previous answer. Error: The output should be a list with only one element, i.e., rewards.'
+            for factor in evaluation_factors:
+                if len(factor.shape) != 2 or factor.shape[0] != 2 or factor.shape[1] != 1:
+                    pass_check=False
+                    error_idx = i
+                    error_content = f'There is an error in your previous answer. Error: The shape of the output factors should be (batch_size, 1).'
+        except Exception as e:
+            pass_check=False
+            error_idx = i
+            error_content = f'There is an error in your previous answer. Error:{e.args}' # with state_example: {np.round(np.stack(self.obs, axis=0), 2)}
+            # break
+    return pass_check, error_idx, error_content, factor_num

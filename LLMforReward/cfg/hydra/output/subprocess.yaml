@@ -1,0 +1,5 @@
+# @package _global_
+hydra:
+  output_subdir: null
+  run:
+    dir: ./policy-${now:%Y-%m-%d}_${now:%H-%M-%S}   #指定了输出目录的基本路径和名称格式。./policy-${now:%Y-%m-%d}_${now:%H-%M-%S} 表示输出目录将以 policy-年-月-日_时-分-秒 的格式命名
